@@ -28,13 +28,19 @@ class Lift {
 
     async getName() {
         return new Promise((resolve) => {
-            rl.question("Tolong masukkan nama Anda [minimal 5 karakter]: ", (name) => {
-                while (name.length < 5) {
-                    name = readline.question("Nama Anda harus lebih dari 4 karakter! Tolong masukkan nama Anda [minimal 5 karakter]: ");
-                }
-                this.userName = name;
-                resolve(name);
-            });
+            const askName = () => {
+                rl.question("Tolong masukkan nama Anda [minimal 5 karakter]: ", (name) => {
+                    if (name.length < 5) {
+                        console.log("Nama Anda harus lebih dari 4 karakter!");
+                        askName();
+                    } else {
+                        this.userName = name;
+                        resolve(name);
+                    }
+                });
+            };
+
+            askName();
         });
     }
 
@@ -44,7 +50,7 @@ class Lift {
         console.log(`Lift ${direction} dari lantai ${this.currentFloor} menuju lantai ${floor}...`);
         while (this.currentFloor !== floor) {
             this.currentFloor += direction === "turun" ? -1 : 1;
-            console.log(`Lift ${direction === "turun" ? "turun" : "naik"} ke lantai: ${this.currentFloor}`);
+            console.log(`Lift ${direction} ke lantai: ${this.currentFloor}`);
         }
         
         console.log(`Lift sampai di lantai ${this.currentFloor}, pintu terbuka.`);
